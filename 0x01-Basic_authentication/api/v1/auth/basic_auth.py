@@ -2,6 +2,7 @@
 """Basic auth module"""
 from api.v1.auth.auth import Auth
 import base64
+from typing import Tuple
 
 
 class BasicAuth(Auth):
@@ -31,6 +32,17 @@ class BasicAuth(Auth):
 
     def decode_base64_authorization_header(
             self, base64_authorization_header: str) -> str:
+        """
+        Decode a base64 encoded authorization header.
+
+        Args:
+            base64_authorization_header (str): The base64 encoded
+            authorization header.
+
+        Returns:
+            str: The decoded authorization header.
+
+        """
         if (base64_authorization_header is None or
                 not isinstance(base64_authorization_header, str)):
             return None
@@ -40,3 +52,24 @@ class BasicAuth(Auth):
             return decoded
         except:
             return None
+
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str) -> Tuple[str, str]:
+        """
+        Extracts the user credentials from the decoded base64
+        authorization header.
+
+        Args:
+            decoded_base64_authorization_header (str): The decoded base64
+            authorization header.
+
+        Returns:
+            Tuple[str, str]: A tuple containing the user and email extracted
+            from the header.
+        """
+        if (decoded_base64_authorization_header is None or
+                not isinstance(decoded_base64_authorization_header, str)
+                or ":" not in decoded_base64_authorization_header):
+            return (None, None)
+        user, email = decoded_base64_authorization_header.split(':')
+        return (user, email)
