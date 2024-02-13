@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Basic auth module"""
 from api.v1.auth.auth import Auth
+import base64
 
 
 class BasicAuth(Auth):
@@ -27,3 +28,15 @@ class BasicAuth(Auth):
             return None
         val = authorization_header.split(' ')[1]
         return val
+
+    def decode_base64_authorization_header(
+            self, base64_authorization_header: str) -> str:
+        if (base64_authorization_header is None or
+                not isinstance(base64_authorization_header, str)):
+            return None
+        try:
+            bytes_obj = base64_authorization_header.encode("utf-8")
+            decoded = base64.b64decode(bytes_obj).decode("utf-8")
+            return decoded
+        except:
+            return None
