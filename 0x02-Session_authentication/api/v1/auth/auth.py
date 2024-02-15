@@ -67,7 +67,8 @@ class Auth:
             request (flask.Request): The request object.
 
         Returns:
-            str: The value of the session cookie, or None if the request is None or the cookie is not found.
+            str: The value of the session cookie, or None if
+            the request is None or the cookie is not found.
         """
         if request is None:
             return None
