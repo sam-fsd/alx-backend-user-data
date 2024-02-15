@@ -2,7 +2,6 @@
 
 Simple HTTP API for playing with `User` model.
 
-
 ## Files
 
 ### `models/`
@@ -16,13 +15,11 @@ Simple HTTP API for playing with `User` model.
 - `views/index.py`: basic endpoints of the API: `/status` and `/stats`
 - `views/users.py`: all users endpoints
 
-
 ## Setup
 
 ```
 $ pip3 install -r requirements.txt
 ```
-
 
 ## Run
 
@@ -30,6 +27,9 @@ $ pip3 install -r requirements.txt
 $ API_HOST=0.0.0.0 API_PORT=5000 python3 -m api.v1.app
 ```
 
+## Authentication
+
+Uses custom Session Authentication for various endpoints that require authentication.
 
 ## Routes
 
@@ -40,3 +40,4 @@ $ API_HOST=0.0.0.0 API_PORT=5000 python3 -m api.v1.app
 - `DELETE /api/v1/users/:id`: deletes an user based on the ID
 - `POST /api/v1/users`: creates a new user (JSON parameters: `email`, `password`, `last_name` (optional) and `first_name` (optional))
 - `PUT /api/v1/users/:id`: updates an user based on the ID (JSON parameters: `last_name` and `first_name`)
+- `GET /api/v1/users/me`: retrieves the authenticated user.
