@@ -70,8 +70,16 @@ class DB:
         for key in kwargs.keys():
             if not hasattr(User, key):
                 raise InvalidRequestError
-        email = kwargs.get('email')
-        user = self._session.query(User).filter_by(email=email).first()
+
+        if kwargs.get('email'):
+            email = kwargs.get('email')
+            user = self._session.query(User).filter_by(
+                email=email).first()
+        if kwargs.get('hashed_password'):
+            pwd = kwargs.get('hashed_password')
+            user = self._session.query(User).filter_by(
+                hashed_password=pwd).first()
+
         if user is None:
             raise NoResultFound
         return user
