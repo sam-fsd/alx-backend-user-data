@@ -67,22 +67,14 @@ class DB:
             attribute of the User class.
             NoResultFound: If no user is found matching the provided criteria.
         """
-        for key in kwargs.keys():
-            if not hasattr(User, key):
+        all_users = self._session.query(User)
+        for k, v in kwargs.items():
+            if k not in User.__dict__:
                 raise InvalidRequestError
-
-        if kwargs.get('email'):
-            email = kwargs.get('email')
-            user = self._session.query(User).filter_by(
-                email=email).first()
-        if kwargs.get('hashed_password'):
-            pwd = kwargs.get('hashed_password')
-            user = self._session.query(User).filter_by(
-                hashed_password=pwd).first()
-
-        if user is None:
-            raise NoResultFound
-        return user
+            for usr in all_users:
+                if getattr(usr, k) == v:
+                    return usr
+        raise NoResultFound
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
