@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Flask app"""
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, redirect, url_for
 from auth import Auth
 
 AUTH = Auth()
@@ -48,6 +48,26 @@ def login():
     res = jsonify({"email": email, "message": "logged in"})
     res.set_cookie("session_id", session_id)
     return res
+
+
+@app.route("/sessions", methods=['DELETE'])
+def logout():
+    """
+    Logs out the user by destroying the session associated with
+    the user's session ID.
+
+    Returns:
+        - If the user is successfully logged out, redirects to the
+        'message' page.
+        - If the user is not logged in, aborts the request with a
+        403 Forbidden error.
+    """
+    session_id = request.cookies['session_id']
+    user = AUTH.get_user_from_session_id(session_id)
+    if user:
+        AUTH.destroy_session(user.id)
+        return redirect(url_for('message'))
+    abort(403)
 
 
 if __name__ == "__main__":
