@@ -30,6 +30,15 @@ def users():
 
 @app.route("/sessions", methods=['POST'])
 def login():
+    """
+    Logs in a user by validating their email and password.
+
+    Returns:
+        A JSON response containing the user's email and a success message.
+
+    Raises:
+        HTTPException: If the login credentials are invalid (status code 401).
+    """
     email = request.form['email']
     password = request.form['password']
 
