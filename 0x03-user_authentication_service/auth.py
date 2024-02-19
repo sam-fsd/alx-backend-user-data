@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """The Auth module"""
+import uuid
 import bcrypt
 from db import DB
 from user import User
@@ -66,3 +67,7 @@ class Auth:
             return False
         except NoResultFound:
             return False
+
+    def _generate_uuid():
+        """returns a string repr of a new UUID"""
+        return str(uuid.uuid4())
