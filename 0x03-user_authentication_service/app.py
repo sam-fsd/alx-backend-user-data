@@ -7,7 +7,7 @@ AUTH = Auth()
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", strict_slashes=False)
 def message():
     """
     Returns a JSON response with a welcome message.
@@ -17,7 +17,7 @@ def message():
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route("/users", methods=['POST'])
+@app.route("/users", methods=['POST'], strict_slashes=False)
 def users():
     email = request.form['email']
     password = request.form['password']
@@ -28,7 +28,7 @@ def users():
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route("/sessions", methods=['POST'])
+@app.route("/sessions", methods=['POST'], strict_slashes=False)
 def login():
     """
     Logs in a user by validating their email and password.
@@ -50,7 +50,7 @@ def login():
     return res
 
 
-@app.route("/sessions", methods=['DELETE'])
+@app.route("/sessions", methods=['DELETE'], strict_slashes=False)
 def logout():
     """
     Logs out the user by destroying the session associated with
@@ -62,11 +62,30 @@ def logout():
         - If the user is not logged in, aborts the request with a
         403 Forbidden error.
     """
-    session_id = request.cookies['session_id']
+    session_id = request.cookies.get('session_id')
     user = AUTH.get_user_from_session_id(session_id)
     if user:
         AUTH.destroy_session(user.id)
         return redirect(url_for('message'))
+    abort(403)
+
+
+@app.route("/profile", strict_slashes=False)
+def profile():
+    """
+    Retrieves the user's profile information.
+
+    Returns:
+        If the user is authenticated, returns a JSON
+        response containing the user's email.
+        If the user is not authenticated, returns a 403 Forbidden error.
+    """
+    session_id = request.cookies.get('session_id')
+    if session_id is None:
+        abort(403)
+    user = AUTH.get_user_from_session_id(session_id)
+    if user:
+        return jsonify({"email": user.email})
     abort(403)
 
 
