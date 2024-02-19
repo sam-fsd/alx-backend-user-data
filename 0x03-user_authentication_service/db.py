@@ -2,6 +2,8 @@
 """
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from typing import TypeVar
@@ -45,4 +47,31 @@ class DB:
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
         user = self._session.query(User).filter_by(email=email).first()
+        return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """
+        Find a user by the given criteria.
+
+        Args:
+            **kwargs: Keyword arguments representing the criteria to
+                      search for.
+                      The keys should correspond to attributes of the
+                      User class.
+
+        Returns:
+            User: The found user.
+
+        Raises:
+            InvalidRequestError: If any of the provided criteria is not a valid
+            attribute of the User class.
+            NoResultFound: If no user is found matching the provided criteria.
+        """
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise InvalidRequestError
+        email = kwargs.get('email')
+        user = self._session.query(User).filter_by(email=email).first()
+        if user is None:
+            raise NoResultFound
         return user
