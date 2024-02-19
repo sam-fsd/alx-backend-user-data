@@ -89,5 +89,29 @@ def profile():
     abort(403)
 
 
+@app.route("/reset_password", strict_slashes=False)
+def reset_pwd():
+    """
+    Resets the password for a user.
+
+    Retrieves the email from the request form, generates a reset
+    password token using the AUTH module, and returns the email
+    and reset token as a JSON response.
+
+    Returns:
+        A JSON response containing the email and reset token.
+
+    Raises:
+        403: If there is a ValueError while retrieving the email
+        or generating the reset password token.
+    """
+    try:
+        email = request.form['email']
+        token = AUTH.get_reset_password_token(email)
+        return jsonify({"email": email, "reset_token": token}), 200
+    except ValueError:
+        abort(403)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
