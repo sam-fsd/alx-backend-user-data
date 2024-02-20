@@ -14,6 +14,34 @@ from user import Base, User
 
 class DB:
     """DB class
+
+    This class represents a database connection and provides methods for
+    interacting with the database.
+
+    Attributes:
+        _engine (Engine): The database engine.
+        __session (Session): The database session.
+
+    Methods:
+        __init__: Initialize a new DB instance.
+        add_user: Add a new user to the database.
+        find_user_by: Find a user by the given criteria.
+        update_user: Update a user in the database.
+    """
+
+    def __init__(self) -> None:
+        """Initialize a new DB instance
+        """
+        self._engine = create_engine("sqlite:///a.db", echo=False)
+        Base.metadata.drop_all(self._engine)
+        Base.metadata.create_all(self._engine)
+        self.__session = None
+
+    # Rest of the code...
+
+
+class DB:
+    """DB class
     """
 
     def __init__(self) -> None:
