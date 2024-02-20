@@ -122,14 +122,16 @@ def update_password():
     update is successful.
     :rtype: flask.Response
     """
+    email = request.form.get("email")
+    reset_token = request.form.get("reset_token")
+    new_password = request.form.get("new_password")
+
     try:
-        email = request.form.get('email')
-        token = request.form.get('reset_token')
-        password = request.form.get('new_password')
-        AUTH.update_password(token, password)
-        return jsonify({"email": f"{email}", "message": "Password updated"}), 200
+        AUTH.update_password(reset_token, new_password)
     except ValueError:
         abort(403)
+
+    return jsonify({"email": f"{email}", "message": "Password updated"})
 
 
 if __name__ == "__main__":
