@@ -89,8 +89,8 @@ def profile():
     abort(403)
 
 
-@app.route("/reset_password", strict_slashes=False)
-def reset_pwd():
+@app.route("/reset_password", methods=['POST'], strict_slashes=False)
+def get_reset_password_token():
     """
     Resets the password for a user.
 
