@@ -113,7 +113,7 @@ def get_reset_password_token():
         abort(403)
 
 
-@app.route("/reset_password", methods=["PUT"])
+@app.route("/reset_password", methods=["PUT"], strict_slashes=False)
 def update_password():
     """
     Update the password for a user.
@@ -122,13 +122,12 @@ def update_password():
     update is successful.
     :rtype: flask.Response
     """
-    email = request.form['email']
-    reset_token = request.form['reset_token']
-    new_pwd = request.form['new_password']
-
     try:
-        AUTH.update_password(reset_token, new_pwd)
-        return jsonify({"email": email, "message": 'Password updated'}), 200
+        email = request.form['email']
+        token = request.form['reset_token']
+        password = request.form['new_password']
+        AUTH.update_password(token, password)
+        return jsonify({"email": email, "message": "Password updated"}), 200
     except ValueError:
         abort(403)
 
