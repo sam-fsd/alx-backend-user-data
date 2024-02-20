@@ -116,10 +116,12 @@ class DB:
         Raises:
             ValueError: If no user is found matching the provided user_id.
         """
-        user = self._session.query(User).filter_by(id=user_id).first()
-        if user is None:
+        try:
+            user = self._session.query(User).filter_by(id=user_id).first()
+            for key, value in kwargs.items():
+                if key not in user.__dict__:
+                    raise ValueError
+                setattr(user, key, value)
+            self._session.commit()
+        except NoResultFound:
             raise ValueError
-        for key, value in kwargs.items():
-            setattr(user, key, value)
-        self._session.commit()
-        return None
