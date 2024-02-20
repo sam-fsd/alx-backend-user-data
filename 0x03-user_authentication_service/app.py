@@ -127,7 +127,7 @@ def update_password():
         token = request.form.get('reset_token')
         password = request.form.get('new_password')
         AUTH.update_password(token, password)
-        return jsonify({"email": email, "message": "Password updated"}), 200
+        return jsonify({"email": f"{email}", "message": "Password updated"}), 200
     except ValueError:
         abort(403)
 
