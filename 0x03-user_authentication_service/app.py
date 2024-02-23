@@ -19,6 +19,7 @@ def message():
 
 @app.route("/users", methods=['POST'], strict_slashes=False)
 def users():
+    """registers user with the given email and password"""
     email = request.form['email']
     password = request.form['password']
     try:
